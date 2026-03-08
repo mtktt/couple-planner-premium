@@ -151,15 +151,15 @@ export default function Calendar() {
     <div>
 
       {/* HEADER */}
-      <div className="header flex justify-between items-center px-20 py-8">
+      <div className="header flex justify-between items-center px-6 md:px-20 py-6 md:py-8">
         <button onClick={()=>setMonth(m=>m===0?11:m-1)}>←</button>
-        <h1 className="text-6xl font-bold text-[#3E256A]">
+        <h1 className="text-3xl md:text-6xl font-bold text-[#3E256A] text-center">
           {new Date(year,month).toLocaleString("default",{month:"long"})} {year}
         </h1>
         <button onClick={()=>setMonth(m=>m===11?0:m+1)}>→</button>
       </div>
 
-      <div className="w-full px-20 mt-14 flex gap-16">
+      <div className="w-full px-6 md:px-20 mt-10 flex flex-col md:flex-row gap-10 md:gap-16">
 
         {/* ================= MONTH VIEW ================= */}
         <div className="flex-1">
@@ -170,7 +170,7 @@ export default function Calendar() {
             ))}
           </div>
 
-          <div className="grid grid-cols-7 gap-6">
+          <div className="grid grid-cols-7 gap-2 md:gap-6">
             {Array.from({length:firstDay}).map((_,i)=>(<div key={i}/>))}
 
             {Array.from({length:daysInMonth}).map((_,i)=>{
@@ -198,7 +198,7 @@ export default function Calendar() {
         </div>
 
         {/* ================= RIGHT PANEL ================= */}
-        <div className="w-[480px] flex flex-col gap-12">
+        <div className="w-full md:w-[480px] flex flex-col gap-10">
 
           {/* TIME + WEATHER CARD */}
           <div className="info-card">
@@ -237,7 +237,7 @@ export default function Calendar() {
                 {selectedDate}
               </div>
 
-              <div className="timeline-panel">
+              <div className="timeline-panel max-h-[400px] md:max-h-[520px]">
                 <div className="relative h-[1440px]">
 
                   {Array.from({length:24}).map((_,i)=>(
@@ -286,52 +286,125 @@ export default function Calendar() {
               </div>
 
               {/* FORM */}
-              <div className="mt-8 space-y-5">
+              <div className="mt-10 bg-white/70 backdrop-blur-md p-6 rounded-3xl shadow-lg space-y-5 border border-white/40">
 
+                {/* TITLE */}
                 <input
                   placeholder="Event Title"
                   value={form.title}
-                  onChange={e=>setForm({...form,title:e.target.value})}
-                  className="w-full p-4 rounded-2xl border border-black/20 text-lg"
+                  onChange={e => setForm({ ...form, title: e.target.value })}
+                  className="
+                    w-full 
+                    px-5 py-4 
+                    text-lg 
+                    rounded-2xl 
+                    border border-gray-200
+                    focus:outline-none 
+                    focus:ring-2 
+                    focus:ring-purple-400
+                    transition
+                    shadow-sm
+                    bg-white
+                  "
                 />
 
+                {/* TIME */}
                 <div className="flex gap-4">
+
                   <input
                     type="time"
                     value={form.start}
-                    onChange={e=>setForm({...form,start:e.target.value})}
-                    className="w-full p-4 rounded-2xl border border-black/20 text-lg"
+                    onChange={e => setForm({ ...form, start: e.target.value })}
+                    className="
+                      w-full 
+                      px-4 py-3 
+                      rounded-xl 
+                      border border-gray-200
+                      shadow-sm
+                      text-lg
+                      focus:ring-2 focus:ring-purple-400
+                      outline-none
+                    "
                   />
+
                   <input
                     type="time"
                     value={form.end}
-                    onChange={e=>setForm({...form,end:e.target.value})}
-                    className="w-full p-4 rounded-2xl border border-black/20 text-lg"
+                    onChange={e => setForm({ ...form, end: e.target.value })}
+                    className="
+                      w-full 
+                      px-4 py-3 
+                      rounded-xl 
+                      border border-gray-200
+                      shadow-sm
+                      text-lg
+                      focus:ring-2 focus:ring-purple-400
+                      outline-none
+                    "
                   />
+
                 </div>
 
-                <div className="flex gap-3">
-                  {COLORS.map(c=>(
-                    <div key={c}
-                      onClick={()=>setForm({...form,color:c})}
-                      style={{background:c}}
-                      className={`w-8 h-8 rounded-full cursor-pointer transition 
-                      ${form.color===c?"ring-4 ring-black":""}`}
+                {/* COLOR PICKER */}
+                <div className="flex gap-3 mt-2">
+
+                  {COLORS.map(color => (
+
+                    <div
+                      key={color}
+                      onClick={() => setForm({ ...form, color })}
+                      style={{
+                        backgroundColor: color,
+                        width: 38,
+                        height: 38,
+                        borderRadius: "50%",
+                        cursor: "pointer",
+                        boxShadow: form.color === color
+                          ? "0 0 0 4px black"
+                          : "0 2px 6px rgba(255, 252, 252, 0.15)"
+                      }}
                     />
+
                   ))}
+
                 </div>
 
+                {/* SAVE BUTTON */}
                 <button
                   onClick={saveEvent}
-                  className="w-full py-4 rounded-2xl text-lg font-semibold bg-black text-white"
+                  className="
+                    w-full
+                    py-4
+                    rounded-2xl
+                    text-lg
+                    font-bold
+                    bg-gradient-to-r from-purple-500 to-indigo-500
+                    text-white
+                    shadow-md
+                    hover:scale-[1.02]
+                    hover:shadow-lg
+                    transition
+                  "
                 >
-                  {editingId?"Update Event":"Save Event"}
+                  {editingId ? "Update Event" : "Save Event"}
                 </button>
 
+                {/* DELETE */}
                 {editingId && (
                   <button
                     onClick={deleteEventHandler}
-                    className="w-full py-3 rounded-2xl text-lg font-semibold bg-red-500 text-white"
+                    className="
+                      w-full
+                      py-3
+                      rounded-2xl
+                      text-lg
+                      font-bold
+                      bg-red-500
+                      text-white
+                      shadow
+                      hover:bg-red-600
+                      transition
+                    "
                   >
                     Delete Event
                   </button>
